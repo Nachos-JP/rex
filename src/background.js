@@ -4,6 +4,8 @@ import {app, protocol, BrowserWindow} from "electron";
 import {
   createProtocol,
 } from "vue-cli-plugin-electron-builder/lib";
+import WebSocket from "ws";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -14,6 +16,10 @@ let win;
 protocol.registerSchemesAsPrivileged([
   {scheme: "app", privileges: {secure: true, standard: true}},
 ]);
+
+const sleep = sec => {
+  return new Promise(resolve=>setTimeout(resolve, sec*1e3));
+};
 
 function createWindow() {
   // Create the browser window.
@@ -33,8 +39,27 @@ function createWindow() {
     win.loadURL("app://./index.html");
   }
 
+  const ws = new WebSocket("ws://localhost:8989");
+
+  ws.onopen = async () => {
+    console.log("connection opened");
+    for (let i=0; i<5; i++){
+      ws.send("Hello");
+      await sleep(1);
+    }
+  };
+
+  ws.onmessage = message => {
+    console.log(message.data);
+  };
+
+  ws.onerror = () => {
+    console.log("connection error");
+  };
+
   win.on("closed", () => {
     win = null;
+    ws.close();
   });
 }
 
