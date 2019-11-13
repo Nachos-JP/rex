@@ -17,7 +17,7 @@ const sleep = sec => {
   return new Promise(resolve=>setTimeout(resolve, sec*1e3));
 };
 
-function createWindow() {
+const createWindow = () => {
   win = new BrowserWindow({
     width: store.get("window.bound.width", 800),
     height: store.get("window.bound.height", 600),
@@ -26,6 +26,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
+    frame: false,
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -68,7 +69,7 @@ function createWindow() {
     win = null;
     ws.close();
   });
-}
+};
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
