@@ -1,32 +1,147 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-system-bar app class="pa-0 electron-draggable-area">
+      <v-spacer></v-spacer>
+      <v-btn
+        v-for="(item, i) in windowBtnItems"
+        :key="i"
+        @click="controlWindow(item.arg)"
+        class="electron-nodraggable-area"
+      >
+        <v-icon>{{ item.icon }}</v-icon>
+      </v-btn>
+    </v-system-bar>
+
+    <v-app-bar
+      app
+      color="primary"
+      dark
+      dense
+      clipped-left
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Vuetify Logo"
+          class="shrink mr-2"
+          contain
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          transition="scale-transition"
+          width="40"
+        />
+
+        <v-img
+          alt="Vuetify Name"
+          class="shrink mt-1 hidden-sm-and-down"
+          contain
+          min-width="100"
+          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+          width="100"
+        />
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+      >
+        <span class="mr-2">Latest Release</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-navigation-drawer
+      app
+      clipped
+      mini-variant
+      permanent
+      expand-on-hover
+      mini-variant-width="50"
+    >
+      <v-list dense>
+        <v-list-item v-for="(item, i) in navItems" :key="i" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.text }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-content>
+    </v-content>
+
+    <v-footer app class="footer">
+      <v-spacer></v-spacer>
+      <div>{{ version }}</div>
+    </v-footer>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import {remote} from "electron";
+import packageJson from "../package.json";
+
+export default {
+  name: "App",
+  components: {
+  },
+  data: () => ({
+    isMax: false,
+    drawer: true,
+    version: packageJson.version,
+    navItems: [
+      {text: "Setting", icon: "settings_applications"},
+    ],
+  }),
+  computed: {
+    windowBtnItems: function(){
+      return [
+        {icon: "minimize", arg: "min"},
+        this.isMax ? {icon: "fullscreen_exit", arg: "restore"} :
+          {icon: "fullscreen", arg: "max"},
+        {icon: "close", arg: "close"},
+      ];
+    },
+  },
+  methods: {
+    controlWindow: function(type){
+      const window = remote.getCurrentWindow();
+
+      switch (type){
+        case "min":
+          window.minimize();
+          break;
+        case "max":
+          window.maximize();
+          break;
+        case "restore":
+          window.unmaximize();
+          break;
+        case "close":
+          window.close();
+          break;
+      }
+
+      this.isMax = window.isMaximized();
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.electron-draggable-area {
+  -webkit-app-region: drag;
 }
 
-#nav {
-  padding: 30px;
+.electron-nodraggable-area {
+  -webkit-app-region: no-drag;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.footer {
+  font-size: 10px;
 }
 </style>
