@@ -1,16 +1,17 @@
 "use strict";
 
 import {app, protocol, BrowserWindow} from "electron";
-import {
-  createProtocol,
-} from "vue-cli-plugin-electron-builder/lib";
+import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 import WebSocket from "ws";
+import Store from "electron-store";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+
+const store = new Store();
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -23,8 +24,11 @@ const sleep = sec => {
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({width: 800,
-    height: 600,
+  win = new BrowserWindow({
+    width: store.get("window.bound.width", 800),
+    height: store.get("window.bound.height", 600),
+    x: store.get("window.bound.x", null),
+    y: store.get("window.bound.y", null),
     webPreferences: {
       nodeIntegration: true,
     }});
@@ -56,6 +60,16 @@ function createWindow() {
   ws.onerror = () => {
     console.log("connection error");
   };
+
+  win.on("close", () => {
+    const bound = win.getBounds();
+    store.set("window.bound", {
+      width: bound.width,
+      height: bound.height,
+      x: bound.x,
+      y: bound.y,
+    });
+  });
 
   win.on("closed", () => {
     win = null;
