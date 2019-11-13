@@ -1,5 +1,15 @@
 <template>
   <v-app>
+    <v-system-bar app class="pa-0">
+      <v-spacer></v-spacer>
+      <v-btn
+        v-for="(item, i) in windowBtnItems"
+        :key="i"
+        @click="controlWindow(item.arg)"
+      >
+        <v-icon v-text="item.name"></v-icon>
+      </v-btn>
+    </v-system-bar>
     <v-app-bar
       app
       color="primary"
@@ -45,16 +55,47 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld";
+import {remote} from "electron";
 
 export default {
   name: "App",
-
   components: {
     HelloWorld,
   },
-
   data: () => ({
-    //
+    isMax: false,
   }),
+  computed: {
+    windowBtnItems: function(){
+      return [
+        {name: "minimize", arg: "min"},
+        this.isMax ? {name: "fullscreen_exit", arg: "restore"} :
+          {name: "fullscreen", arg: "max"},
+        {name: "close", arg: "close"},
+      ];
+    },
+  },
+  methods: {
+    controlWindow: function(type){
+      const window = remote.getCurrentWindow();
+
+      switch (type){
+        case "min":
+          window.minimize();
+          break;
+        case "max":
+          window.maximize();
+          break;
+        case "restore":
+          window.unmaximize();
+          break;
+        case "close":
+          window.close();
+          break;
+      }
+
+      this.isMax = window.isMaximized();
+    },
+  },
 };
 </script>
