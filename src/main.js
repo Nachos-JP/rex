@@ -7,9 +7,13 @@ import "material-icons/iconfont/material-icons.css";
 
 Vue.config.productionTip = false;
 
-new Vue({
+const vm = new Vue({
   router,
   store,
   vuetify,
   render: h => h(App),
 }).$mount("#app");
+
+window.onresize = () => {
+  vm.$store.commit("checkWindowIsMax");
+};
