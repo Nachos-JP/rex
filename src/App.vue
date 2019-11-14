@@ -54,9 +54,9 @@
     <v-navigation-drawer
       app
       clipped
-      mini-variant
+      :mini-variant="!isBreak"
       permanent
-      expand-on-hover
+      :expand-on-hover="!isBreak"
       mini-variant-width="50"
     >
       <v-list dense>
@@ -97,6 +97,9 @@ export default {
     ],
   }),
   computed: {
+    isBreak(){
+      return this.$vuetify.breakpoint.lg;
+    },
     windowIsMax(){
       return this.$store.state.windowIsMax;
     },
