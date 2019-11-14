@@ -60,7 +60,7 @@
       mini-variant-width="50"
     >
       <v-list dense>
-        <v-list-item v-for="(item, i) in navItems" :key="i" link>
+        <v-list-item v-for="(item, i) in navItems" :key="i" link :to="item.url">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -72,6 +72,7 @@
     </v-navigation-drawer>
 
     <v-content>
+      <router-view></router-view>
     </v-content>
 
     <v-footer app class="footer">
@@ -93,7 +94,8 @@ export default {
     drawer: true,
     version: packageJson.version,
     navItems: [
-      {text: "Setting", icon: "settings_applications"},
+      {text: "Process", icon: "transform", url: "process"},
+      {text: "Setting", icon: "settings_applications", url: "setting"},
     ],
   }),
   computed: {
