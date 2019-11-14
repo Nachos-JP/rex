@@ -90,7 +90,6 @@ export default {
   components: {
   },
   data: () => ({
-    isMax: false,
     drawer: true,
     version: packageJson.version,
     navItems: [
@@ -98,17 +97,20 @@ export default {
     ],
   }),
   computed: {
-    windowBtnItems: function(){
+    windowIsMax(){
+      return this.$store.state.windowIsMax;
+    },
+    windowBtnItems(){
       return [
         {icon: "minimize", arg: "min"},
-        this.isMax ? {icon: "fullscreen_exit", arg: "restore"} :
+        this.windowIsMax ? {icon: "fullscreen_exit", arg: "restore"} :
           {icon: "fullscreen", arg: "max"},
         {icon: "close", arg: "close"},
       ];
     },
   },
   methods: {
-    controlWindow: function(type){
+    controlWindow(type){
       const window = remote.getCurrentWindow();
 
       switch (type){
@@ -125,8 +127,6 @@ export default {
           window.close();
           break;
       }
-
-      this.isMax = window.isMaximized();
     },
   },
 };
