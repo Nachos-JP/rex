@@ -95,6 +95,10 @@ export default {
     version: packageJson.version,
     navItems: [
       {text: "Process", icon: "transform", url: "process"},
+      {text: "Parameter", icon: "tune", url: "parameter"},
+      {text: "Tag", icon: "local_offer", url: "tag"},
+      {text: "Study", icon: "import_contacts", url: "study"},
+      {text: "Run", icon: "play_circle_outline", url: "run"},
       {text: "Setting", icon: "settings_applications", url: "setting"},
     ],
   }),
