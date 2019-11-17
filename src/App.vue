@@ -56,13 +56,17 @@
       clipped
       :mini-variant="!isBreak"
       permanent
-      :expand-on-hover="!isBreak"
       mini-variant-width="50"
     >
       <v-list dense>
         <v-list-item v-for="(item, i) in navItems" :key="i" link :to="item.url">
           <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-tooltip right>
+              <template v-slot:activator="{ on }">
+                <v-icon v-on="on">{{ item.icon }}</v-icon>
+              </template>
+              <span>{{ item.text }}</span>
+            </v-tooltip>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>{{ item.text }}</v-list-item-title>
@@ -91,7 +95,6 @@ export default {
   components: {
   },
   data: () => ({
-    drawer: true,
     version: packageJson.version,
     navItems: [
       {text: "Process", icon: "transform", url: "process"},
