@@ -9,7 +9,7 @@
     <v-list dense>
       <v-list-item v-for="(item, i) in navItems" :key="i" link :to="item.url">
         <v-list-item-icon>
-          <v-tooltip right>
+          <v-tooltip right :disabled="isBreak">
             <template v-slot:activator="{ on }">
               <v-icon v-on="on">{{ item.icon }}</v-icon>
             </template>
