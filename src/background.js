@@ -2,8 +2,8 @@
 
 import {app, protocol, BrowserWindow} from "electron";
 import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
-import WebSocket from "ws";
 import Store from "electron-store";
+import Pso from "pso";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 let win;
@@ -15,6 +15,20 @@ protocol.registerSchemesAsPrivileged([
 
 const sleep = sec => {
   return new Promise(resolve=>setTimeout(resolve, sec*1e3));
+};
+
+const optimize = async () => {
+  const pso = new Pso();
+  pso.setObjectiveFunction(x => -(x[0] * x[0] + x[1] * x[1]));
+
+  pso.init(20, [{start: -10, end: 10}, {start: -10, end: 10}]);
+
+  for (let i = 0; i < 40; i++) {
+    pso.step();
+    await sleep(0.1);
+  }
+
+  console.log(pso.getBestFitness(), pso.getBestPosition());
 };
 
 const createWindow = () => {
@@ -37,24 +51,6 @@ const createWindow = () => {
     win.loadURL("app://./index.html");
   }
 
-  const ws = new WebSocket("ws://localhost:8989");
-
-  ws.onopen = async () => {
-    console.log("connection opened");
-    for (let i=0; i<5; i++){
-      ws.send("Hello");
-      await sleep(1);
-    }
-  };
-
-  ws.onmessage = message => {
-    console.log(message.data);
-  };
-
-  ws.onerror = () => {
-    console.log("connection error");
-  };
-
   win.on("close", () => {
     const bound = win.getBounds();
     store.set("window.bound", {
@@ -67,8 +63,9 @@ const createWindow = () => {
 
   win.on("closed", () => {
     win = null;
-    ws.close();
   });
+
+  optimize();
 };
 
 app.on("window-all-closed", () => {
