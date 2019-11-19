@@ -13,19 +13,25 @@ protocol.registerSchemesAsPrivileged([
   {scheme: "app", privileges: {secure: true, standard: true}},
 ]);
 
-const sleep = sec => {
-  return new Promise(resolve=>setTimeout(resolve, sec*1e3));
+// const sleep = sec => {
+//   return new Promise(resolve=>setTimeout(resolve, sec*1e3));
+// };
+
+const benchMark = x => {
+  const a = Math.cos(x[0]);
+  const b = Math.cos(x[1]);
+  const c = Math.exp(-((x[0]-Math.PI)**2 + (x[1]-Math.PI)**2));
+  return a * b * c;
 };
 
 const optimize = async () => {
   const pso = new Pso();
-  pso.setObjectiveFunction(x => -(x[0] * x[0] + x[1] * x[1]));
+  pso.setObjectiveFunction(benchMark);
 
-  pso.init(20, [{start: -10, end: 10}, {start: -10, end: 10}]);
+  pso.init(20, [{start: -100, end: 100}, {start: -100, end: 100}]);
 
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 1000; i++) {
     pso.step();
-    await sleep(0.1);
   }
 
   console.log(pso.getBestFitness(), pso.getBestPosition());
