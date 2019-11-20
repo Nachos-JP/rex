@@ -1,6 +1,6 @@
 "use strict";
 
-import {app, protocol, BrowserWindow} from "electron";
+import {app, protocol, BrowserWindow, ipcMain} from "electron";
 import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 import Store from "electron-store";
 import Pso from "pso";
@@ -21,7 +21,7 @@ const benchMark = async (x, done) => {
   const a = Math.cos(x[0]);
   const b = Math.cos(x[1]);
   const c = Math.exp(-((x[0]-Math.PI)**2 + (x[1]-Math.PI)**2));
-  await sleep(0.01);
+  await sleep(0.5);
   done(a * b * c);
 };
 
@@ -32,7 +32,7 @@ const optimize = async () => {
   pso.init(20, [{start: -100, end: 100}, {start: -100, end: 100}]);
 
   let count = 0;
-  const maxIteration = 100;
+  const maxIteration = 30;
 
   const loop = () => {
     if (count >= maxIteration){
@@ -41,7 +41,11 @@ const optimize = async () => {
     } else {
       count ++;
       console.log(`iteration: ${count}`);
+
       pso.step(loop);
+
+      const particles = pso.getParticles();
+      if (win !== null) win.webContents.send("retrieve-particle", particles);
     }
   };
 
@@ -81,8 +85,6 @@ const createWindow = () => {
   win.on("closed", () => {
     win = null;
   });
-
-  optimize();
 };
 
 app.on("window-all-closed", () => {
@@ -99,6 +101,10 @@ app.on("activate", () => {
 
 app.on("ready", async () => {
   createWindow();
+});
+
+ipcMain.on("run-optimize", (event, arg) => {
+  optimize();
 });
 
 if (isDevelopment) {

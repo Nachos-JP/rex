@@ -1,9 +1,15 @@
 <template>
-  <span>Run</span>
+  <v-btn @click="run" color="primary">Run</v-btn>
 </template>
 
 <script>
-export default {
+import {ipcRenderer} from "electron";
 
+export default {
+  methods: {
+    run(){
+      ipcRenderer.send("run-optimize", "");
+    },
+  },
 };
 </script>
