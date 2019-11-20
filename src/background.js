@@ -13,28 +13,39 @@ protocol.registerSchemesAsPrivileged([
   {scheme: "app", privileges: {secure: true, standard: true}},
 ]);
 
-// const sleep = sec => {
-//   return new Promise(resolve=>setTimeout(resolve, sec*1e3));
-// };
+const sleep = sec => {
+  return new Promise(resolve=>setTimeout(resolve, sec*1e3));
+};
 
-const benchMark = x => {
+const benchMark = async (x, done) => {
   const a = Math.cos(x[0]);
   const b = Math.cos(x[1]);
   const c = Math.exp(-((x[0]-Math.PI)**2 + (x[1]-Math.PI)**2));
-  return a * b * c;
+  await sleep(0.01);
+  done(a * b * c);
 };
 
 const optimize = async () => {
   const pso = new Pso();
-  pso.setObjectiveFunction(benchMark);
+  pso.setObjectiveFunction(benchMark, {async: true});
 
   pso.init(20, [{start: -100, end: 100}, {start: -100, end: 100}]);
 
-  for (let i = 0; i < 1000; i++) {
-    pso.step();
-  }
+  let count = 0;
+  const maxIteration = 100;
 
-  console.log(pso.getBestFitness(), pso.getBestPosition());
+  const loop = () => {
+    if (count >= maxIteration){
+      console.log("best fitness", pso.getBestFitness());
+      console.log("best position", pso.getBestPosition());
+    } else {
+      count ++;
+      console.log(`iteration: ${count}`);
+      pso.step(loop);
+    }
+  };
+
+  loop();
 };
 
 const createWindow = () => {
