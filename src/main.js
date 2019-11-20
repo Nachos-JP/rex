@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "material-icons/iconfont/material-icons.css";
+import {ipcRenderer} from "electron";
 
 Vue.config.productionTip = false;
 
@@ -17,3 +18,7 @@ const vm = new Vue({
 window.onresize = () => {
   vm.$store.commit("checkWindowIsMax");
 };
+
+ipcRenderer.on("retrieve-particle", (event, arg) => {
+  console.log(arg);
+});
