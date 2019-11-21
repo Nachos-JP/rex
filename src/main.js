@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import "material-icons/iconfont/material-icons.css";
+import "handsontable/dist/handsontable.full.css";
 import {ipcRenderer} from "electron";
 
 Vue.config.productionTip = false;
