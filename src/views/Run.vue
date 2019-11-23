@@ -13,7 +13,7 @@
       </v-btn>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="4">
         <PieChart
           :width="200"
           :height="200"
@@ -21,7 +21,17 @@
           :options="pieOptions"
         />
       </v-col>
-      <v-col></v-col>
+      <v-col cols="8">
+        <v-row>
+          <v-col>
+            <hot-table :settings="paramTableSetting"></hot-table>
+          </v-col>
+          <v-col>
+            <hot-table :settings="historyTableSetting"></hot-table>
+          </v-col>
+        </v-row>
+        <v-row></v-row>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -29,10 +39,12 @@
 <script>
 import {ipcRenderer} from "electron";
 import PieChart from "@/components/PieChart.vue";
+import {HotTable} from "@handsontable/vue";
 
 export default {
   components: {
     PieChart,
+    HotTable,
   },
   data: () => ({
     controlBtns: [
@@ -50,6 +62,26 @@ export default {
           },
         },
       },
+    },
+    paramTableSetting: {
+      colHeaders: ["Name", "Best", "Base", "Diff"],
+      autoColumnSize: true,
+      licenseKey: "non-commercial-and-evaluation",
+      columns: [
+        {data: "name", readOnly: true},
+        {data: "best", readOnly: true},
+        {data: "base", readOnly: true},
+        {data: "diff", readOnly: true},
+      ],
+    },
+    historyTableSetting: {
+      colHeaders: ["ID", "Process"],
+      autoColumnSize: true,
+      licenseKey: "non-commercial-and-evaluation",
+      columns: [
+        {data: "id", readOnly: true},
+        {data: "process", readOnly: true},
+      ],
     },
   }),
   computed: {
