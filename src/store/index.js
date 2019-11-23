@@ -17,11 +17,23 @@ export default new Vuex.Store({
     outputParameter: [...Array(5)].map((v, i)=>({
       name: `response${i+1}`,
     })),
+    processRatio: {
+      feasible: 10,
+      inFeasible: 5,
+      error: 12,
+    },
   },
   mutations: {
     checkWindowIsMax(){
       const window = remote.getCurrentWindow();
       this.state.windowIsMax = window.isMaximized();
+    },
+    updateProcess(){
+      this.state.processRatio = {
+        feasible: Math.floor(Math.random()*101),
+        inFeasible: Math.floor(Math.random()*101),
+        error: Math.floor(Math.random()*101),
+      };
     },
   },
   actions: {
