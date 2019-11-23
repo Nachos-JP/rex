@@ -7,7 +7,13 @@
     mini-variant-width="50"
   >
     <v-list dense>
-      <v-list-item v-for="(item, i) in navItems" :key="i" link :to="item.url">
+      <v-list-item
+        v-for="(item, i) in navItems"
+        :key="i"
+        link
+        :to="item.url"
+        :style="item.style"
+      >
         <v-list-item-icon>
           <v-tooltip right :disabled="isBreak">
             <template v-slot:activator="{ on }">
@@ -29,12 +35,17 @@ export default {
   name: "Navigation",
   data: () => ({
     navItems: [
-      {text: "Process", icon: "transform", url: "process"},
-      {text: "Parameter", icon: "tune", url: "parameter"},
-      {text: "Tag", icon: "local_offer", url: "tag"},
-      {text: "Study", icon: "import_contacts", url: "study"},
-      {text: "Run", icon: "play_circle_outline", url: "run"},
-      {text: "Setting", icon: "settings_applications", url: "setting"},
+      {text: "Process", icon: "transform", url: "process", style: ""},
+      {text: "Parameter", icon: "tune", url: "parameter", style: ""},
+      {text: "Tag", icon: "local_offer", url: "tag", style: ""},
+      {text: "Study", icon: "import_contacts", url: "study", style: ""},
+      {text: "Run", icon: "play_circle_outline", url: "run", style: ""},
+      {
+        text: "Setting",
+        icon: "settings_applications",
+        url: "setting",
+        style: "position: absolute; bottom: 0; width: 100%;",
+      },
     ],
   }),
   computed: {
