@@ -34,7 +34,7 @@ export default {
       ipcRenderer.send("run-optimize", "");
     },
     pause(){
-      console.log("pause");
+      console.log(this.$store.state.inputParameter);
     },
     stop(){
       console.log("stop");
