@@ -14,7 +14,12 @@
     </v-row>
     <v-row>
       <v-col>
-        <PieChart :chartData="pieData" :options="pieOptions" />
+        <PieChart
+          :width="200"
+          :height="200"
+          :chartData="pieData"
+          :options="pieOptions"
+        />
       </v-col>
       <v-col></v-col>
     </v-row>
