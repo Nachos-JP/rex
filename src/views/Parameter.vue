@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-row class="ml-5" style="height:50%;">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-chip color="primary" outlined>
             <v-icon left>input</v-icon>
@@ -9,12 +9,15 @@
           </v-chip>
         </v-row>
         <v-row class="mt-2">
-          <hot-table :settings="hotSettings"></hot-table>
+          <hot-table
+            :data="inputTableData"
+            :settings="inputTableSetting"
+          ></hot-table>
         </v-row>
       </v-container>
     </v-row>
     <v-row class="ml-5" style="height:50%;">
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-chip color="primary" outlined>
             <v-icon left>assessment</v-icon>
@@ -22,7 +25,10 @@
           </v-chip>
         </v-row>
         <v-row class="mt-2">
-          <hot-table :settings="hotSettings"></hot-table>
+          <hot-table
+            :data="outputTableData"
+            :settings="outputTableSetting"
+          ></hot-table>
         </v-row>
       </v-container>
     </v-row>
@@ -31,18 +37,67 @@
 
 <script>
 import {HotTable} from "@handsontable/vue";
-import Handsontable from "handsontable";
 
 export default {
   data: () => ({
-    hotSettings: {
-      data: Handsontable.helper.createSpreadsheetData(6, 10),
-      colHeaders: true,
+    inputTableSetting: {
+      colHeaders: ["Name", "Min", "Base", "Max"],
+      rowHeaders: true,
+      minSpareRows: 1,
+      autoColumnSize: true,
+      contextMenu: [
+        "row_above",
+        "row_below",
+        "---------",
+        "remove_row",
+        "---------",
+        "undo",
+        "redo",
+        "---------",
+        "copy",
+        "cut",
+      ],
       licenseKey: "non-commercial-and-evaluation",
+      columns: [
+        {data: "name", type: "text"},
+        {data: "min", type: "numeric"},
+        {data: "base", type: "numeric"},
+        {data: "max", type: "numeric"},
+      ],
+    },
+    outputTableSetting: {
+      colHeaders: ["Name"],
+      rowHeaders: true,
+      minSpareRows: 1,
+      autoColumnSize: true,
+      contextMenu: [
+        "row_above",
+        "row_below",
+        "---------",
+        "remove_row",
+        "---------",
+        "undo",
+        "redo",
+        "---------",
+        "copy",
+        "cut",
+      ],
+      licenseKey: "non-commercial-and-evaluation",
+      columns: [
+        {data: "name", type: "text"},
+      ],
     },
   }),
   components: {
     HotTable,
+  },
+  computed: {
+    inputTableData(){
+      return this.$store.state.inputParameter;
+    },
+    outputTableData(){
+      return this.$store.state.outputParameter;
+    },
   },
 };
 </script>
