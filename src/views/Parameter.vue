@@ -41,7 +41,7 @@ import {HotTable} from "@handsontable/vue";
 export default {
   data: () => ({
     inputTableSetting: {
-      colHeaders: ["Name", "Min", "Base", "Max", "Resolution"],
+      colHeaders: ["Name", "Min", "Base", "Max"],
       rowHeaders: true,
       minSpareRows: 1,
       autoColumnSize: true,
@@ -63,7 +63,6 @@ export default {
         {data: "min", type: "numeric"},
         {data: "base", type: "numeric"},
         {data: "max", type: "numeric"},
-        {data: "resolution", type: "numeric"},
       ],
     },
     outputTableSetting: {

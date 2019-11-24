@@ -21,5 +21,5 @@ window.onresize = () => {
 };
 
 ipcRenderer.on("retrieve-particle", (event, arg) => {
-  console.log(arg);
+  vm.$store.commit("updateResult", arg);
 });

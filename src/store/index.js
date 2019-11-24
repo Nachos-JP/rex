@@ -7,33 +7,29 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     windowIsMax: false,
-    inputParameter: [...Array(5)].map((v, i)=>({
-      name: `variable${i+1}`,
-      min: 10,
-      base: 20,
-      max: 30,
-      resolution: 101,
-    })),
-    outputParameter: [...Array(5)].map((v, i)=>({
-      name: `response${i+1}`,
-    })),
+    inputParameter: [],
+    outputParameter: [],
     processRatio: {
       feasible: 10,
       inFeasible: 5,
       error: 12,
     },
+    results: [],
   },
   mutations: {
-    checkWindowIsMax(){
+    checkWindowIsMax(state){
       const window = remote.getCurrentWindow();
-      this.state.windowIsMax = window.isMaximized();
+      state.windowIsMax = window.isMaximized();
     },
-    updateProcess(){
-      this.state.processRatio = {
+    updateProcess(state){
+      state.processRatio = {
         feasible: Math.floor(Math.random()*101),
         inFeasible: Math.floor(Math.random()*101),
         error: Math.floor(Math.random()*101),
       };
+    },
+    updateResult(state, payload){
+      state.results = [].concat(state.results, payload);
     },
   },
   actions: {

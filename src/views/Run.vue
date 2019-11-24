@@ -110,6 +110,7 @@ export default {
     },
     pause(){
       console.log(this.$store.state.inputParameter);
+      console.log(this.$store.state.results);
     },
     stop(){
       this.$store.commit("updateProcess");
