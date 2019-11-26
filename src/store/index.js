@@ -15,6 +15,7 @@ export default new Vuex.Store({
       error: 12,
     },
     results: [],
+    url: null,
   },
   mutations: {
     checkWindowIsMax(state){
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     },
     updateResult(state, payload){
       state.results = [].concat(state.results, payload);
+    },
+    setUrl(state, payload){
+      state.url = payload;
     },
   },
   actions: {
