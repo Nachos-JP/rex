@@ -4,6 +4,7 @@ import {app, protocol, BrowserWindow, ipcMain} from "electron";
 import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 import Store from "electron-store";
 import Pso from "pso";
+import WebSocket from "ws";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 let win;
@@ -105,6 +106,21 @@ app.on("ready", async () => {
 
 ipcMain.on("run-optimize", (event, arg) => {
   optimize();
+
+  const ws = new WebSocket("ws://localhost:8989");
+
+  ws.onopen = () => {
+    console.log("connection opened");
+    ws.send(JSON.stringify(arg));
+  };
+
+  ws.onmessage = message => {
+    console.log(message.data);
+  };
+
+  ws.onerror = () => {
+    console.log("connection error");
+  };
 });
 
 if (isDevelopment) {
