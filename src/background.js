@@ -123,6 +123,23 @@ ipcMain.on("run-optimize", (event, arg) => {
   };
 });
 
+ipcMain.handle("check-url", (event, arg) => {
+  let ws;
+  try {
+    ws = new WebSocket(`ws://${arg}`);
+  } catch (e){
+    return false;
+  }
+
+  return new Promise(resolve=>{
+    ws.onopen = () => {
+      ws.close();
+      resolve(true);
+    };
+    ws.onerror = () => resolve(false);
+  });
+});
+
 if (isDevelopment) {
   if (process.platform === "win32") {
     process.on("message", data => {

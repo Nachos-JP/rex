@@ -16,7 +16,7 @@
 export default {
   methods: {
     setUrl(url){
-      this.$store.commit("setUrl", url);
+      this.$store.commit("setUrl", {appserver: url});
     },
   },
 };
