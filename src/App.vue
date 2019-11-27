@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import SystemBar from "@/views/SystemBar.vue";
-import AppBar from "@/views/AppBar.vue";
-import Navigation from "@/views/Navigation.vue";
-import Footer from "@/views/Footer.vue";
+import SystemBar from "@/components/SystemBar.vue";
+import AppBar from "@/components/AppBar.vue";
+import Navigation from "@/components/Navigation.vue";
+import Footer from "@/components/Footer.vue";
 
 export default {
   name: "App",
