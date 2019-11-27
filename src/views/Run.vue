@@ -106,7 +106,9 @@ export default {
       this[methodName]();
     },
     run(){
-      ipcRenderer.send("run-optimize", "");
+      ipcRenderer.send("run-optimize", {
+        url: this.$store.state.url,
+      });
     },
     pause(){
       console.log(this.$store.state.inputParameter);
