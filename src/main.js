@@ -20,6 +20,6 @@ window.onresize = () => {
   vm.$store.commit("checkWindowIsMax");
 };
 
-ipcRenderer.on("retrieve-particle", (event, arg) => {
+ipcRenderer.on("retrieve-data", (event, arg) => {
   vm.$store.commit("updateResult", arg);
 });

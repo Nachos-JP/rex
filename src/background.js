@@ -3,7 +3,6 @@
 import {app, protocol, BrowserWindow, ipcMain} from "electron";
 import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 import Store from "electron-store";
-import Pso from "pso";
 import WebSocket from "ws";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -13,45 +12,6 @@ const store = new Store();
 protocol.registerSchemesAsPrivileged([
   {scheme: "app", privileges: {secure: true, standard: true}},
 ]);
-
-const sleep = sec => {
-  return new Promise(resolve=>setTimeout(resolve, sec*1e3));
-};
-
-const benchMark = async (x, done) => {
-  const a = Math.cos(x[0]);
-  const b = Math.cos(x[1]);
-  const c = Math.exp(-((x[0]-Math.PI)**2 + (x[1]-Math.PI)**2));
-  await sleep(0.5);
-  done(a * b * c);
-};
-
-const optimize = async () => {
-  const pso = new Pso();
-  pso.setObjectiveFunction(benchMark, {async: true});
-
-  pso.init(20, [{start: -100, end: 100}, {start: -100, end: 100}]);
-
-  let count = 0;
-  const maxIteration = 30;
-
-  const loop = () => {
-    if (count >= maxIteration){
-      console.log("best fitness", pso.getBestFitness());
-      console.log("best position", pso.getBestPosition());
-    } else {
-      count ++;
-      console.log(`iteration: ${count}`);
-
-      pso.step(loop);
-
-      const particles = pso.getParticles();
-      if (win !== null) win.webContents.send("retrieve-particle", particles);
-    }
-  };
-
-  loop();
-};
 
 const createWindow = () => {
   win = new BrowserWindow({
@@ -105,8 +65,6 @@ app.on("ready", async () => {
 });
 
 ipcMain.on("run-optimize", (event, arg) => {
-  optimize();
-
   const ws = new WebSocket("ws://localhost:8989");
 
   ws.onopen = () => {
