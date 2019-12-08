@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="5">
         <v-text-field
-          label="Optimus Address"
+          label="Optimize Server Address"
           placeholder="localhost:8989"
           @change="validateUrl"
           :loading="loading"
@@ -11,7 +11,7 @@
           :error-messages="errorMessage"
           :success="success"
           :success-messages="successMessage"
-          :value="optimusUrl"
+          :value="optimizeUrl"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -34,8 +34,8 @@ export default {
     successMessage(){
       return this.success ? "Success, connected to Optimus." : "";
     },
-    optimusUrl(){
-      return this.$store.state.url.optimus;
+    optimizeUrl(){
+      return this.$store.state.server.optimize.url;
     },
   },
   methods: {
@@ -44,7 +44,12 @@ export default {
       const res = await ipcRenderer.invoke("check-url", url);
       this.error = res ? false : true;
       this.success = res;
-      this.$store.commit("setUrl", {optimus: url});
+      this.$store.commit("setServerStatus", {
+        optimize: {
+          url: url,
+          status: res,
+        },
+      });
       this.loading = false;
     },
   },
