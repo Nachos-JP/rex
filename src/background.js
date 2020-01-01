@@ -4,6 +4,7 @@ import {app, protocol, BrowserWindow, ipcMain} from "electron";
 import {createProtocol} from "vue-cli-plugin-electron-builder/lib";
 import Store from "electron-store";
 import WebSocket from "ws";
+import fetch from "node-fetch";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 let win;
@@ -96,6 +97,20 @@ ipcMain.handle("check-url", (event, arg) => {
     };
     ws.onerror = () => resolve(false);
   });
+});
+
+ipcMain.handle("check-app-url", async (event, arg) => {
+  try {
+    const res = await fetch(`http://${arg.optimizeUrl}/check_url`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({url: arg.appUrl}),
+    });
+    const json = await res.json();
+    return json.status;
+  } catch (e){
+    return false;
+  }
 });
 
 if (isDevelopment) {

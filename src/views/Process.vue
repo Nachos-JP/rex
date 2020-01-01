@@ -19,7 +19,7 @@
 </template>
 
 <script>
-// import {ipcRenderer} from "electron";
+import {ipcRenderer} from "electron";
 
 export default {
   data: () => ({
@@ -53,12 +53,17 @@ export default {
       }
 
       this.loading = true;
-      this.error = false;
-      this.success = true;
+      const optimizeServerUrl = this.$store.state.server.optimize.url;
+      const res = await ipcRenderer.invoke("check-app-url", {
+        optimizeUrl: optimizeServerUrl,
+        appUrl: url,
+      });
+      this.error = res ? false : true;
+      this.success = res;
       this.$store.commit("setServerStatus", {
         app: {
           url: url,
-          status: null,
+          status: res,
         },
       });
       this.loading = false;
